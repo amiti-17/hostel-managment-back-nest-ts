@@ -1,0 +1,57 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type CurrentWeather {
+  current: JSON!
+  dt: Int!
+  id: Int!
+  weather: Weather
+}
+
+type DailyWeather {
+  daily: JSON!
+  dt: Int!
+  id: Int!
+  weather: Weather
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Location {
+  country: String
+  id: Int!
+  lat: Float!
+  lon: Float!
+  name: String!
+  state: String
+  users: [User]!
+  weather: Weather
+  weatherId: Int
+}
+
+type Query {
+  getWeather: Weather!
+}
+
+type Subscription {
+  weatherUpdated(weatherId: Int!): Weather!
+}
+
+type User {
+  email: String!
+  id: Int!
+  locations: [Location]!
+  name: String!
+}
+
+type Weather {
+  current: CurrentWeather
+  currentId: Int!
+  days: [DailyWeather!]
+  id: Int!
+  locations: Location
+}
