@@ -10,4 +10,7 @@ export class CreateUserInput {
 
   @Field()
   name: string;
+
+  @Field(() => [String])
+  role: string[];
 }

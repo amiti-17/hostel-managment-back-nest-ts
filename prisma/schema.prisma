@@ -15,12 +15,32 @@ datasource db {
 }
 
 model User {
-  id                    String                  @id @default(auto()) @map("_id") @db.ObjectId
-  email                 String                  @unique()
-  name                  String
-  password              String
-  role                  String
-  preferences           Json?
+  id             String                  @id @default(auto()) @map("_id") @db.ObjectId
+  email          String                  @unique()
+  name           String
+  password       String
+  role           String[]
+
+  // Define a one-to-one relationship with UserPreferences
+  preferences    UserPreferences?        @relation(fields: [preferencesId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  preferencesId  String?                 @unique @db.ObjectId
+
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+}
+
+model UserPreferences {
+  id             String                  @id @default(auto()) @map("_id") @db.ObjectId
+  preferredTheme String
+
+  // Define a one-to-one relationship with User
+  user           User?                   
+  userId         String?
+
+  @@unique([userId])
+
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
 }
 
 
