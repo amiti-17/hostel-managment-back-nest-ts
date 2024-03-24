@@ -48,5 +48,9 @@ export class UsersService {
     email: true,
     id: true,
     locations: true,
+    role: true,
+    preferences: true,
+    createdAt: true,
+    updatedAt: true,
   };
 }

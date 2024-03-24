@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-// import { AuthResolver } from './auth.resolver';
-// import { AuthService } from './auth.service';
+import { AuthResolver } from './auth.resolver';
+import { AuthService } from './auth.service';
 import { JwtRefreshTokenStrategy } from './strategies/jwt-refresh-token.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
@@ -19,8 +19,8 @@ import { UsersModule } from 'src/modules/users/users.module';
     }),
   ],
   providers: [
-    // AuthResolver,
-    // AuthService,
+    AuthResolver,
+    AuthService,
     JwtStrategy,
     JwtRefreshTokenStrategy,
     PrismaService,

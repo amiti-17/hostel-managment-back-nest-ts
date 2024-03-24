@@ -4,10 +4,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { UsersModule } from './modules/users/users.module';
 import { PrismaService } from './modules/prisma/prisma.service';
-import { LocationsModule } from './modules/locations/locations.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { WeathersModule } from './modules/weathers/weathers.module';
-import { DailyWeatherModule } from './modules/dailyWeather/dailyWeather.module';
 
 @Module({
   imports: [
@@ -23,10 +20,7 @@ import { DailyWeatherModule } from './modules/dailyWeather/dailyWeather.module';
       sortSchema: true,
     }),
     UsersModule,
-    LocationsModule,
     AuthModule,
-    WeathersModule,
-    DailyWeatherModule,
   ],
   providers: [PrismaService],
 })

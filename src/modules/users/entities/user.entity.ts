@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { UserPreferences } from './user-preferences.entity';
 
 @ObjectType()
 export class User {
@@ -10,4 +11,19 @@ export class User {
 
   @Field()
   email: string;
+
+  @Field(() => [String])
+  role: string[];
+
+  @Field(() => String, { nullable: true })
+  preferencesId?: string;
+
+  @Field(() => UserPreferences, { nullable: true })
+  preferences?: UserPreferences;
+
+  @Field(() => Date)
+  createdAt: Date;
+
+  @Field(() => Date)
+  updatedAt: Date;
 }
