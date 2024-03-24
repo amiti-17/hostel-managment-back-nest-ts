@@ -1,17 +1,13 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Location } from 'src/modules/locations/entities/location.entity';
+import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class User {
-  @Field(() => Int)
-  id: number;
+  @Field()
+  id: string;
 
   @Field()
   name: string;
 
   @Field()
   email: string;
-
-  @Field(() => [Location], { nullable: 'items' })
-  locations?: Location[];
 }
