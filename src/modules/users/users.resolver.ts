@@ -10,8 +10,9 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { name: 'users' })
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async findAll(@Context() context) {
-    console.log(context);
+    // console.log(context);
     return await this.usersService.findAll();
   }
 

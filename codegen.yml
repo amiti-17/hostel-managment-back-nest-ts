@@ -1,0 +1,7 @@
+schema: src/schema.gql
+generates:
+  path/to/generated/types.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
