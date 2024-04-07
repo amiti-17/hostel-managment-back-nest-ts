@@ -1,18 +1,32 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './entities/user.entity';
 import { UserWithPassword } from './entities/user-password.entity';
 import { PrismaService } from 'src/modules/prisma/prisma.service';
+import { UpdateUsersPasswordInput } from './dto/update-user-password';
+import { StatusOutput } from '../auth/dto/status.output';
+import { regExp } from 'src/config/regexp';
+import { HttpException } from '@nestjs/common';
+import { errorMsg } from 'src/config/constants/errorMsg';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
+    this.validateCreateUserInput(createUserInput);
+    if (!createUserInput) {
+      return;
+    }
     return await this.prisma.user.create({
       data: {
         ...createUserInput,
+        password: await bcrypt.hash(
+          createUserInput.password,
+          process.env.SALT_FOR_PASSWORD,
+        ),
       },
       select: this.selectUser,
     });
@@ -41,6 +55,77 @@ export class UsersService {
         password: true,
       },
     });
+  }
+
+  async updatePassword({
+    id,
+    newPassword,
+    oldPassword,
+  }: UpdateUsersPasswordInput): Promise<StatusOutput> {
+    const currentUser = await this.findOne({ id });
+    if (newPassword === oldPassword) {
+      throw new HttpException(
+        errorMsg.updatedPasswordMatchedWithProvidedOld,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    this.validatePassword(newPassword);
+    if (await bcrypt.compare(oldPassword, currentUser.password)) {
+      const updatedUser = await this.prisma.user.update({
+        where: { id },
+        data: {
+          password: await bcrypt.hash(
+            newPassword,
+            process.env.SALT_FOR_PASSWORD,
+          ),
+        },
+        select: { id: true },
+      });
+      return { status: updatedUser.id ? true : false };
+    } else {
+      throw new HttpException(
+        errorMsg.oldPasswordNotMatched,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  validateCreateUserInput(
+    createUserInput: CreateUserInput,
+  ): CreateUserInput | undefined {
+    if (!regExp.email.test(createUserInput.email)) {
+      throw new HttpException(errorMsg.incorrectEmail, HttpStatus.BAD_REQUEST);
+    }
+    this.validatePassword(createUserInput.password);
+    return createUserInput;
+  }
+
+  validatePassword(password: string): string {
+    if (password.length < 8) {
+      throw new HttpException(errorMsg.passwordLength, HttpStatus.BAD_REQUEST);
+    }
+    if (!regExp.digit.test(password)) {
+      throw new HttpException(errorMsg.passwordDigit, HttpStatus.BAD_REQUEST);
+    }
+    if (!regExp.upperCaseLetter.test(password)) {
+      throw new HttpException(
+        errorMsg.passwordUpperCase,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (!regExp.lowerCaseLetter.test(password)) {
+      throw new HttpException(
+        errorMsg.passwordLowerCase,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (!regExp.specialSymbol.test(password)) {
+      throw new HttpException(
+        errorMsg.passwordSpecialSymbols,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return password;
   }
 
   private selectUser = {

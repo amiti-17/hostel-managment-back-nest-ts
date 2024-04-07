@@ -25,17 +25,24 @@ type Mutation {
   logout: StatusOutput!
   refreshToken: StatusOutput!
   removeUser(id: String!): User!
+  updateUsersPassword(updateUsersPassword: UpdateUsersPasswordInput!): StatusOutput!
 }
 
 type Query {
   findById(id: String!): User!
   getCurrentUser: User!
-  user(email: String!): User!
+  user(email: String!): UserWithPassword!
   users: [User!]!
 }
 
 type StatusOutput {
   status: Boolean!
+}
+
+input UpdateUsersPasswordInput {
+  id: String!
+  newPassword: String!
+  oldPassword: String!
 }
 
 type User {
@@ -55,4 +62,15 @@ type UserPreferences {
   preferredTheme: String!
   updatedAt: DateTime!
   userId: String!
+}
+
+type UserWithPassword {
+  createdAt: DateTime!
+  email: String!
+  id: String!
+  name: String!
+  password: String!
+  preferences: UserPreferences
+  role: [String!]!
+  updatedAt: DateTime!
 }

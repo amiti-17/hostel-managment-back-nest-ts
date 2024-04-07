@@ -4,6 +4,9 @@ import { UsersService } from './users.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { User } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { UserWithPassword } from './entities/user-password.entity';
+import { StatusOutput } from '../auth/dto/status.output';
+import { UpdateUsersPasswordInput } from './dto/update-user-password';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -16,7 +19,7 @@ export class UsersResolver {
     return await this.usersService.findAll();
   }
 
-  @Query(() => User, { name: 'user' })
+  @Query(() => UserWithPassword, { name: 'user' })
   @UseGuards(JwtAuthGuard)
   async findOne(@Args('email') email: string) {
     return await this.usersService.findOne({ email });
@@ -42,5 +45,12 @@ export class UsersResolver {
   @Mutation(() => User)
   async removeUser(@Args('id') id: string) {
     return await this.usersService.remove(id);
+  }
+
+  @Mutation(() => StatusOutput)
+  async updateUsersPassword(
+    @Args('updateUsersPassword') updateUsersPassword: UpdateUsersPasswordInput,
+  ): Promise<StatusOutput> {
+    return await this.usersService.updatePassword(updateUsersPassword);
   }
 }
