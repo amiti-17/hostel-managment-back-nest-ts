@@ -97,6 +97,7 @@ export class UsersService {
       throw new HttpException(errorMsg.incorrectEmail, HttpStatus.BAD_REQUEST);
     }
     this.validatePassword(createUserInput.password);
+    this.validatePhone(createUserInput.phone);
     return createUserInput;
   }
 
@@ -128,9 +129,18 @@ export class UsersService {
     return password;
   }
 
+  validatePhone(phoneNumber: string): string {
+    if (!regExp.phone.test(phoneNumber)) {
+      throw new HttpException(errorMsg.incorrectPhone, HttpStatus.BAD_REQUEST);
+    }
+    return phoneNumber;
+  }
+
   private selectUser = {
     name: true,
     email: true,
+    phone: true,
+    readDashboardPostIds: true,
     id: true,
     role: true,
     preferences: true,

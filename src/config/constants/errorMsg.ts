@@ -2,6 +2,7 @@ import { regExpStr } from '../regexp';
 
 export const errorMsg = {
   incorrectEmail: "Email didn't pass validation",
+  incorrectPhone: "Phone didn't pass validation",
   passwordLength: 'Password must contain at least 8 characters',
   passwordRichTopSymbolsLimit: 'Password must be 100 characters or less',
   passwordLowerCase: 'Password should contain at least one lowercase character',

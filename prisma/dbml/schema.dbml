@@ -8,8 +8,24 @@ Table User {
   name String [not null]
   password String [not null]
   role String[] [not null]
+  phone String [unique, not null]
   preferences UserPreferences
   preferencesId String [unique]
+  profileImage ProfileImage
+  profileImageId String [unique]
+  groupList Group [not null]
+  groupIdsList String[] [not null]
+  readDashboardPostIds String[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table ProfileImage {
+  id String [pk]
+  name String [not null]
+  type String [not null]
+  imageSrc String [not null]
+  user User
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -23,4 +39,123 @@ Table UserPreferences {
   updatedAt DateTime [not null]
 }
 
+Table DashboardPost {
+  id String [pk]
+  title String [not null]
+  description String [not null]
+  logoImage DashboardPostImage
+  logoImageId String [unique]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table DashboardPostImage {
+  id String [pk]
+  name String [not null]
+  type String [not null]
+  imageSrc String [not null]
+  dashboardPost DashboardPost
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Group {
+  id String [pk]
+  identification String [not null]
+  type String [not null]
+  isGroup Boolean [not null]
+  isPrivate Boolean [not null]
+  usersList User [not null]
+  usersIdsList String[] [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Task {
+  id String [pk]
+  title String [not null]
+  shortDescription String
+  description String
+  type String [not null]
+  roleNeeds String[] [not null]
+  status String [not null]
+  dateStart DateTime
+  dateFinish DateTime
+  isReassigned Boolean [not null, default: false]
+  reassignedTo String[] [not null]
+  estimated Int
+  importance String [not null]
+  executorsId String
+  isAssigned Boolean [not null, default: false]
+  review Review
+  reviewId String [unique]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Review {
+  id String [pk]
+  fromId String [not null]
+  toId String [not null]
+  title String [not null]
+  description String [not null]
+  mark Int [not null]
+  notes String
+  task Task
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Hotel {
+  id String [pk]
+  name String [not null]
+  location String
+  whenBuild DateTime [default: `now()`, not null]
+  whenLaunched DateTime [default: `now()`, not null]
+  floors Floor [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Floor {
+  id String [pk]
+  number Int [not null]
+  rooms Room [not null]
+  hotel Hotel
+  hotelId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Room {
+  id String [pk]
+  number Int [not null]
+  type String [not null]
+  capacity Int [not null]
+  status String [not null]
+  title String [not null]
+  description String
+  statusDescription String
+  isFree Boolean [not null, default: true]
+  isOccupied Boolean [not null, default: false]
+  floor Floor
+  floorId String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
 Ref: User.preferencesId - UserPreferences.id [delete: Cascade]
+
+Ref: User.profileImageId - ProfileImage.id [delete: Cascade]
+
+Ref: User.groupIdsList > Group.id
+
+Ref: DashboardPost.logoImageId - DashboardPostImage.id [delete: Cascade]
+
+Ref: Group.usersIdsList > User.id
+
+Ref: Task.reviewId - Review.id [delete: Cascade]
+
+Ref: Floor.hotelId > Hotel.id
+
+Ref: Room.floorId > Floor.id

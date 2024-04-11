@@ -7,19 +7,37 @@ export class User {
   id: string;
 
   @Field()
-  name: string;
+  email: string;
 
   @Field()
-  email: string;
+  name: string;
 
   @Field(() => [String])
   role: string[];
 
-  @Field(() => String, { nullable: true })
-  preferencesId?: string;
+  @Field()
+  phone: string;
 
   @Field(() => UserPreferences, { nullable: true })
   preferences?: UserPreferences;
+
+  @Field(() => String, { nullable: true })
+  preferencesId?: string;
+
+  // @Field(() => ProfileImage)
+  // profileImage?: ProfileImage;
+
+  // @Field(() => String, { nullable: true })
+  // profileImageId?: string;
+
+  // @Field(() => [GroupList])
+  // groupList?: GroupList;
+
+  // @Field(() => [String])
+  // groupListId?: string;
+
+  @Field(() => [String])
+  readDashboardPostIds: string[];
 
   @Field(() => Date)
   createdAt: Date;

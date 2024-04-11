@@ -11,6 +11,7 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
+  phone: String!
   role: [String!]!
 }
 
@@ -50,8 +51,10 @@ type User {
   email: String!
   id: String!
   name: String!
+  phone: String!
   preferences: UserPreferences
   preferencesId: String
+  readDashboardPostIds: [String!]!
   role: [String!]!
   updatedAt: DateTime!
 }
@@ -70,7 +73,10 @@ type UserWithPassword {
   id: String!
   name: String!
   password: String!
+  phone: String!
   preferences: UserPreferences
+  preferencesId: String
+  readDashboardPostIds: [String!]!
   role: [String!]!
   updatedAt: DateTime!
 }
