@@ -15,10 +15,42 @@ input CreateUserInput {
   role: [String!]!
 }
 
+type DashboardPost {
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  logoImage: DashboardPostImage
+  logoImageId: String
+  title: String!
+  updatedAt: DateTime!
+}
+
+type DashboardPostImage {
+  createdAt: DateTime!
+  dashboardPost: DashboardPost
+  id: String!
+  imageSrc: String!
+  name: String!
+  type: String!
+  updatedAt: DateTime!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type Group {
+  createdAt: DateTime!
+  id: String!
+  identification: String!
+  isGroup: Boolean!
+  isPrivate: Boolean!
+  type: String!
+  updatedAt: DateTime!
+  usersIdsList: [String!]!
+  usersList: [User!]!
+}
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
@@ -29,7 +61,18 @@ type Mutation {
   updateUsersPassword(updateUsersPassword: UpdateUsersPasswordInput!): StatusOutput!
 }
 
+type ProfileImage {
+  createdAt: DateTime!
+  id: String!
+  imageSrc: String!
+  name: String!
+  type: String!
+  updatedAt: DateTime!
+  user: User
+}
+
 type Query {
+  dashboard: DashboardPost!
   findById(id: String!): User!
   getCurrentUser: User!
   user(email: String!): UserWithPassword!
@@ -70,12 +113,16 @@ type UserPreferences {
 type UserWithPassword {
   createdAt: DateTime!
   email: String!
+  groupList: [Group!]
+  groupListId: [String!]
   id: String!
   name: String!
   password: String!
   phone: String!
   preferences: UserPreferences
   preferencesId: String
+  profileImage: ProfileImage
+  profileImageId: String
   readDashboardPostIds: [String!]!
   role: [String!]!
   updatedAt: DateTime!

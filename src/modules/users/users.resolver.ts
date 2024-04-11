@@ -7,6 +7,8 @@ import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 import { UserWithPassword } from './entities/user-password.entity';
 import { StatusOutput } from '../auth/dto/status.output';
 import { UpdateUsersPasswordInput } from './dto/update-user-password';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -33,6 +35,7 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'getCurrentUser' })
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RolesGuard)
   async getCurrentUser(@Context() context) {
     return await this.usersService.findOne({ id: context.req.user.sub });
   }
