@@ -7,7 +7,7 @@ Table User {
   email String [unique, not null]
   name String [not null]
   password String [not null]
-  role String[] [not null]
+  roles String[] [not null]
   phone String [unique, not null]
   preferences UserPreferences
   preferencesId String [unique]

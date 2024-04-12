@@ -35,6 +35,7 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'getCurrentUser' })
   @UseGuards(JwtAuthGuard)
+  @Roles(['Admin'])
   @UseGuards(RolesGuard)
   async getCurrentUser(@Context() context) {
     return await this.usersService.findOne({ id: context.req.user.sub });

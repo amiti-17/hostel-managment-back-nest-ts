@@ -1,5 +1,7 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { UserPreferences } from './user-preferences.entity';
+import { ProfileImage } from 'src/modules/profile-image/entities/profile-image.entity';
+import { Group } from 'src/modules/group/entities/group.entity';
 
 @ObjectType()
 export class User {
@@ -13,7 +15,7 @@ export class User {
   name: string;
 
   @Field(() => [String])
-  role: string[];
+  roles: string[];
 
   @Field()
   phone: string;
@@ -24,21 +26,20 @@ export class User {
   @Field(() => String, { nullable: true })
   preferencesId?: string;
 
-  // @Field(() => ProfileImage)
-  // profileImage?: ProfileImage;
+  @Field(() => ProfileImage, { nullable: true })
+  profileImage?: ProfileImage;
 
-  // @Field(() => String, { nullable: true })
-  // profileImageId?: string;
+  @Field(() => String, { nullable: true })
+  profileImageId?: string;
 
-  // @Field(() => [GroupList])
-  // groupList?: GroupList;
+  @Field(() => [Group], { nullable: true })
+  groupList?: Group[];
 
-  // @Field(() => [String])
-  // groupListId?: string;
+  @Field(() => [String], { nullable: true })
+  groupListId?: string[];
 
   @Field(() => [String])
   readDashboardPostIds: string[];
-
   @Field(() => Date)
   createdAt: Date;
 

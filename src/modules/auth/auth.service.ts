@@ -52,8 +52,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(
       {
         sub: user.id,
-        name: user.name,
-        email: user.email,
+        roles: user.roles,
       },
       {
         secret: process.env.ACCESS_SECRET,
@@ -68,8 +67,7 @@ export class AuthService {
     const refreshToken = this.jwtService.sign(
       {
         sub: user.id,
-        name: user.name,
-        email: user.email,
+        roles: user.roles,
       },
       {
         secret: process.env.REFRESH_SECRET,

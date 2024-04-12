@@ -1,22 +1,52 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from '../enums/role.enum';
-import { ROLES_KEY } from '../decorators/roles.decorator';
+import { Roles } from '../decorators/roles.decorator';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { JwtService } from '@nestjs/jwt';
+import { strConstants } from 'src/config/public/strConstants';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private jwtService: JwtService,
+  ) {}
 
-  canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-    console.log({ requiredRoles });
-    if (!requiredRoles) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const roles = this.reflector.get(Roles, context.getHandler()); // it's which role should exist on user to continue; []
+    if (!roles) {
       return true;
     }
-    const { user } = context.switchToHttp().getRequest();
-    return requiredRoles.some((role) => user.roles?.includes(role));
+    const ctx = GqlExecutionContext.create(context);
+    const request = ctx.getContext().req;
+    try {
+      const payload = await this.jwtService.verifyAsync(
+        request.cookies[strConstants.accessToken],
+        {
+          secret: process.env.ACCESS_SECRET,
+          ignoreExpiration: false,
+        },
+      );
+      request['user'] = payload;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+    const user = request?.user;
+    return this.matchRoles(roles, user?.roles);
+  }
+
+  matchRoles(roles, userRoles) {
+    let canActivate = false;
+    userRoles?.forEach((role) => {
+      if (roles.includes(role)) {
+        canActivate = true;
+      }
+    });
+    return canActivate;
   }
 }

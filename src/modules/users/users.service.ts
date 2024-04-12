@@ -142,7 +142,7 @@ export class UsersService {
     phone: true,
     readDashboardPostIds: true,
     id: true,
-    role: true,
+    roles: true,
     preferences: true,
     preferencesId: true,
     createdAt: true,

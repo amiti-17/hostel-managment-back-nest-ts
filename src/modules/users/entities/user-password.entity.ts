@@ -18,7 +18,7 @@ export class UserWithPassword {
   password: string;
 
   @Field(() => [String])
-  role: string[];
+  roles: string[];
 
   @Field()
   phone: string;
@@ -36,10 +36,10 @@ export class UserWithPassword {
   profileImageId?: string;
 
   @Field(() => [Group], { nullable: true })
-  groupList?: Group;
+  groupList?: Group[];
 
   @Field(() => [String], { nullable: true })
-  groupListId?: string;
+  groupListId?: string[];
 
   @Field(() => [String])
   readDashboardPostIds: string[];

@@ -92,13 +92,17 @@ input UpdateUsersPasswordInput {
 type User {
   createdAt: DateTime!
   email: String!
+  groupList: [Group!]
+  groupListId: [String!]
   id: String!
   name: String!
   phone: String!
   preferences: UserPreferences
   preferencesId: String
+  profileImage: ProfileImage
+  profileImageId: String
   readDashboardPostIds: [String!]!
-  role: [String!]!
+  roles: [String!]!
   updatedAt: DateTime!
 }
 
@@ -124,6 +128,6 @@ type UserWithPassword {
   profileImage: ProfileImage
   profileImageId: String
   readDashboardPostIds: [String!]!
-  role: [String!]!
+  roles: [String!]!
   updatedAt: DateTime!
 }
