@@ -39,7 +39,7 @@ export class UserWithPassword {
   groupList?: Group[];
 
   @Field(() => [String], { nullable: true })
-  groupListId?: string[];
+  groupIdsList?: string[];
 
   @Field(() => [String])
   readDashboardPostIds: string[];

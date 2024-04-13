@@ -1,5 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { User } from 'src/modules/users/entities/user.entity';
+// import { User } from 'src/modules/users/entities/user.entity';
 
 @ObjectType()
 export class Group {
@@ -18,8 +18,8 @@ export class Group {
   @Field(() => Boolean)
   isPrivate: boolean;
 
-  @Field(() => [User])
-  usersList: User[];
+  // @Field(() => [User])
+  // usersList: User[];
 
   @Field(() => [String])
   usersIdsList: string[];

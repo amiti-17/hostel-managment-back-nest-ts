@@ -10,10 +10,15 @@ import { StatusOutput } from '../auth/dto/status.output';
 import { regExp } from 'src/config/regexp';
 import { HttpException } from '@nestjs/common';
 import { errorMsg } from 'src/config/constants/errorMsg';
+import { UpdateUsersProfileImage } from './dto/update-user-profile-image';
+import { ProfileImageService } from '../profile-image/profile-image.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private profileImageService: ProfileImageService,
+  ) {}
 
   async create(createUserInput: CreateUserInput): Promise<User> {
     this.validateCreateUserInput(createUserInput);
@@ -136,15 +141,45 @@ export class UsersService {
     return phoneNumber;
   }
 
+  async updateProfileImage({
+    usersId: id,
+    type,
+    name,
+    newProfileImage,
+  }: UpdateUsersProfileImage): Promise<StatusOutput> {
+    // TODO: learn how to validate image on back
+
+    const createdProfileImage = await this.profileImageService.create({
+      type,
+      name,
+      imageSrc: newProfileImage,
+    });
+    const updateUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        profileImage: { connect: { id: createdProfileImage.id } },
+      },
+      select: { profileImage: true },
+    });
+    if (updateUser.profileImage.id) {
+      return { status: true };
+    }
+    return { status: false };
+  }
+
   private selectUser = {
-    name: true,
-    email: true,
-    phone: true,
-    readDashboardPostIds: true,
     id: true,
+    email: true,
+    name: true,
     roles: true,
+    phone: true,
     preferences: true,
     preferencesId: true,
+    profileImage: true,
+    profileImageId: true,
+    groupList: true,
+    groupIdsList: true,
+    readDashboardPostIds: true,
     createdAt: true,
     updatedAt: true,
   };

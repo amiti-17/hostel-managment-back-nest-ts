@@ -9,6 +9,7 @@ import { StatusOutput } from '../auth/dto/status.output';
 import { UpdateUsersPasswordInput } from './dto/update-user-password';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { UpdateUsersProfileImage } from './dto/update-user-profile-image';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -56,5 +57,13 @@ export class UsersResolver {
     @Args('updateUsersPassword') updateUsersPassword: UpdateUsersPasswordInput,
   ): Promise<StatusOutput> {
     return await this.usersService.updatePassword(updateUsersPassword);
+  }
+
+  @Mutation(() => StatusOutput, { name: 'updateProfileImage' })
+  async updateUsersProfileImage(
+    @Args('updateUsersProfileImage')
+    updateUsersProfileImage: UpdateUsersProfileImage,
+  ): Promise<StatusOutput> {
+    return await this.usersService.updateProfileImage(updateUsersProfileImage);
   }
 }
