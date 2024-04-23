@@ -25,6 +25,14 @@ export class AuthResolver {
   }
 
   @Mutation(() => StatusOutput)
+  async adminLogin(
+    @Args('authLoginInput') authLoginInput: AuthLoginInput,
+    @Res() res: Response,
+  ): Promise<StatusOutput> {
+    return await this.authService.adminLogin(authLoginInput, res);
+  }
+
+  @Mutation(() => StatusOutput)
   logout(@Res() res: Response): StatusOutput {
     return this.authService.logout(res);
   }

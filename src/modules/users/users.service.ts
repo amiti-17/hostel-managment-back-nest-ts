@@ -62,6 +62,18 @@ export class UsersService {
     });
   }
 
+  async findAdmin(
+    filter: { email: string } | { id: string },
+  ): Promise<UserWithPassword> {
+    return await this.prisma.user.findUnique({
+      where: { ...filter, roles: { has: 'admin' } },
+      select: {
+        ...this.selectUser,
+        password: true,
+      },
+    });
+  }
+
   async updatePassword({
     id,
     newPassword,

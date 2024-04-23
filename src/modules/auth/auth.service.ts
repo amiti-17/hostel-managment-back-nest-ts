@@ -21,8 +21,20 @@ export class AuthService {
     private usersServices: UsersService,
     private jwtService: JwtService,
   ) {}
+
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersServices.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...safeUser } = user;
+      return safeUser;
+    }
+
+    throw new UnauthorizedException();
+  }
+
+  async validateAdmin(email: string, password: string): Promise<User> {
+    const user = await this.usersServices.findAdmin({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...safeUser } = user;
@@ -37,6 +49,22 @@ export class AuthService {
     res: Response,
   ): Promise<StatusOutput> {
     const user = await this.validateUser(
+      authLoginInput.email,
+      authLoginInput.password,
+    );
+    const accessToken = this.generateAccessToken(user);
+    const refreshToken = this.generateRefreshToken(user);
+    this.attachTokens(res, accessToken, refreshToken);
+    return {
+      status: true,
+    };
+  }
+
+  async adminLogin(
+    authLoginInput: AuthLoginInput,
+    res: Response,
+  ): Promise<StatusOutput> {
+    const user = await this.validateAdmin(
       authLoginInput.email,
       authLoginInput.password,
     );

@@ -74,17 +74,22 @@ export type Group = {
   type: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   usersIdsList: Array<Scalars['String']['output']>;
-  usersList: Array<User>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  adminLogin: StatusOutput;
   createUser: User;
   login: StatusOutput;
   logout: StatusOutput;
   refreshToken: StatusOutput;
   removeUser: User;
+  updateProfileImage: StatusOutput;
   updateUsersPassword: StatusOutput;
+};
+
+export type MutationAdminLoginArgs = {
+  authLoginInput: AuthLoginInput;
 };
 
 export type MutationCreateUserArgs = {
@@ -97,6 +102,10 @@ export type MutationLoginArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['String']['input'];
+};
+
+export type MutationUpdateProfileImageArgs = {
+  updateUsersProfileImage: UpdateUsersProfileImage;
 };
 
 export type MutationUpdateUsersPasswordArgs = {
@@ -142,12 +151,19 @@ export type UpdateUsersPasswordInput = {
   oldPassword: Scalars['String']['input'];
 };
 
+export type UpdateUsersProfileImage = {
+  name: Scalars['String']['input'];
+  newProfileImage: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+  usersId: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
+  groupIdsList?: Maybe<Array<Scalars['String']['output']>>;
   groupList?: Maybe<Array<Group>>;
-  groupListId?: Maybe<Array<Scalars['String']['output']>>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   phone: Scalars['String']['output'];
@@ -173,8 +189,8 @@ export type UserWithPassword = {
   __typename?: 'UserWithPassword';
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
+  groupIdsList?: Maybe<Array<Scalars['String']['output']>>;
   groupList?: Maybe<Array<Group>>;
-  groupListId?: Maybe<Array<Scalars['String']['output']>>;
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   password: Scalars['String']['output'];

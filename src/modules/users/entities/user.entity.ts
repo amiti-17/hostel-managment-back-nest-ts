@@ -40,6 +40,7 @@ export class User {
 
   @Field(() => [String])
   readDashboardPostIds: string[];
+
   @Field(() => Date)
   createdAt: Date;
 

@@ -52,6 +52,7 @@ type Group {
 }
 
 type Mutation {
+  adminLogin(authLoginInput: AuthLoginInput!): StatusOutput!
   createUser(createUserInput: CreateUserInput!): User!
   login(authLoginInput: AuthLoginInput!): StatusOutput!
   logout: StatusOutput!
